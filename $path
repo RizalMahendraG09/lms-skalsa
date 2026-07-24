@@ -1,0 +1,27 @@
+﻿<?php
+require 'C:\laragon\www\skalsa-lms\vendor\autoload.php';
+$app = require_once 'C:\laragon\www\skalsa-lms\bootstrap\app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+$p = DB::table('pertemuan')->where('id', 2)->first();
+echo 'Session mapel_id: ' . $p->mata_pelajaran_id . PHP_EOL;
+$mp = DB::table('mata_pelajarans')->where('id', $p->mata_pelajaran_id)->first();
+echo 'Mapel nama: ' . $mp->nama_mapel . ' | kelas_id: ' . $mp->kelas_id . PHP_EOL;
+
+$student = DB::table('users')->where('role', 'siswa')->where('kelas_id', $mp->kelas_id)->first();
+if ($student) {
+    echo 'Student: ' . $student->name . ' (ID: ' . $student->id . ') kelas_id: ' . $student->kelas_id . PHP_EOL;
+} else {
+    echo 'No siswa found for kelas_id: ' . $mp->kelas_id . PHP_EOL;
+    $all = DB::table('users')->where('role', 'siswa')->get();
+    foreach ($all as $s) {
+        echo '  ' . $s->name . ' kelas_id: ' . $s->kelas_id . PHP_EOL;
+    }
+}
+
+$absensi = DB::table('absensi_siswa')->where('pertemuan_id', 2)->get();
+echo 'Absensi records: ' . $absensi->count() . PHP_EOL;
+foreach ($absensi as $a) {
+    echo '  siswa_id: ' . $a->siswa_id . ' status: ' . $a->status . PHP_EOL;
+}
+echo 'NOW: ' . date('Y-m-d H:i:s') . PHP_EOL;

@@ -35,6 +35,7 @@ use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::get('/', [PublicController::class, 'home'])->name('public.home');
 Route::get('kontak', [PublicController::class, 'kontak'])->name('public.kontak');
@@ -166,3 +167,13 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+ 
+
+Route::get('/debug', function (Request $request) {
+    return [
+        'url' => url('/'),
+        'secure' => $request->isSecure(),
+        'scheme' => $request->getScheme(),
+        'asset' => asset('build/manifest.json'),
+    ];
+});

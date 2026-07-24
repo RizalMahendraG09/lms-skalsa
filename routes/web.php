@@ -170,10 +170,14 @@ require __DIR__.'/auth.php';
  
 
 Route::get('/debug', function (Request $request) {
-    return [
-        'url' => url('/'),
-        'secure' => $request->isSecure(),
+    return response()->json([
+        'isSecure' => $request->isSecure(),
         'scheme' => $request->getScheme(),
+        'url' => url('/'),
         'asset' => asset('build/manifest.json'),
-    ];
+        'headers' => [
+            'x-forwarded-proto' => $request->header('x-forwarded-proto'),
+            'host' => $request->header('host'),
+        ],
+    ]);
 });
